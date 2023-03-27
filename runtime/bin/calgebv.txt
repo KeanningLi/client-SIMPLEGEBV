@@ -1,0 +1,115 @@
+##GBLUP计算GEBV
+if (!requireNamespace("iterators")) install.packages("iterators")
+library(iterators)
+if (!requireNamespace("parallel")) install.packages("parallel")
+library(parallel)
+if (!requireNamespace("foreach")) install.packages("foreach")
+library(foreach)
+if (!requireNamespace("doParallel")) install.packages("doParallel")
+library(doParallel)
+if (!requireNamespace("regress")) install.packages("regress")
+library(regress)
+if (!requireNamespace("Matrix")) install.packages("Matrix")
+library(Matrix)
+if (!requireNamespace("lme4")) install.packages("lme4")
+library(lme4)
+if (!requireNamespace("EMMREML")) install.packages("EMMREML")
+library(EMMREML)
+if (!requireNamespace("dplyr")) install.packages("dplyr")
+library(dplyr)
+
+predictMartini <- function(Y,V,training,topredict){  
+  n <- sum(training)  
+  total <- nrow(V)  #返回指定矩阵的行数
+  yvalid <- Y[topredict]  
+  GG <- V/(max(V))  
+  Pheno <- Y[training]  
+  abc <- emmreml(y=Y[training], X=cbind(matrix(rep(1, n), ncol=1)),Z=diag(total)[training,],  
+                 K=GG)  
+  abc$sigma <- c(GG = abc$Vu,In = abc$Ve)  
+  print(abc$sigma)  
+  pred1 <- abc$uhat  
+  yvalidBC <- pred1[topredict]  
+  cor1 <- cor(yvalid,as.vector(yvalidBC))  
+  bb1 <- lm(yvalid ~ as.vector(yvalidBC))$coefficients[2]  
+  return(list(cor = cor1,bb = bb1,vc = abc$sigma,gebv=pred1))
+}  
+
+args_set <- commandArgs(trailingOnly = T)
+
+
+y<-read.csv(args_set[2],header = T)
+G<-read.table(args_set[3])
+id<-read.table(args_set[4],header = F)
+krep <- as.numeric(args_set[5])
+fold <- as.numeric(args_set[6])
+
+LOG.GBLUP <- T 
+ACCUR<-c()
+bbia<-c()
+
+GG <- as.matrix(G)
+colnames(id)[2]="ID"
+colnames(y)[2]="ID"
+c=dplyr::left_join(id,y,by="ID")#以ID为准匹配y中的值并返回至id文件中，同时保持id文件的每一行,？双冒号指定包中某功能
+y=c[,c(1:2,8)]#选取c的1，2，8列，及每行(列可以使用（1，2，8）也可以（1：2，8）)
+y0<-y[,3]#选取y的第三列
+rownames(G)<-id[,2]
+colnames(G)<-id[,2]
+
+acc<-c();bb<-c();gebv<-c()
+acc_list <- list()  
+bb_list <- list()   
+gebv_list<-list()
+group <- matrix(0,length(y0),krep)
+
+for (i in 1:krep){
+  set.seed(i^2+12)#生成随机数，特定编号的种子：使得随机数可重复，即XX号随机数，
+  group[,i] <- sample(1:fold,length(y0),replace=T,prob=rep(1/fold,fold))
+}
+#进行交叉验证，并cat输出系列结果输出结果
+#if-else显示KK和JJ，标明第几次,KK表明第几次重复，同时区分开四个参考群和一个验证群
+for(i in 1:(krep*fold)){
+  
+  if(i %% fold == 0){kk <- i/fold;jj <- fold}else{kk <- as.integer(i/fold) + 1;jj <- i %% fold}
+  cat(paste("======================================= CV ",kk,"--",jj,"    ",as.character(Sys.time())),"\n")
+  groupkk <- group[,kk]
+  #t验证群，refer参考群
+  tgroup <- groupkk == jj
+  refergroup <- groupkk != jj
+ #使用定义的predicMartini函数，对应四个参数 
+  if (LOG.GBLUP){
+    cat(paste("    GBLUP       ",as.character(Sys.time())),"\n")
+    res <- predictMartini(y0,GG,refergroup,tgroup)
+    gebv<-res$yvalidBC
+    
+	acc2 <- res$cor; unbias2 <- res$bb;gebv2<-res$gebv
+      acc <- c(acc2); bb <- c(unbias2);gebv<-c(gebv2)
+  }
+  names(acc) <- c("GBLUP")
+  
+  print(acc)
+  acc_list[[i]] <- c(kk,jj,acc);bb_list[[i]] <- c(kk,jj,bb);gebv_list[[i]]<-c(kk,jj,gebv)
+}
+
+#========================== Cross-validation finished. Save results to disk !!!
+RES <- Reduce("rbind",acc_list);colnames(RES) <- c("rep","fold","GHBLUP")
+  BB <- Reduce("rbind",bb_list);colnames(BB) <- c("rep","fold","GHBLUP")
+  GEBV<-Reduce("rbind",gebv_list);colnames(BB) <- c("rep","fold","GEBV")
+  GEBV2<-GEBV[,-c(1:2)]
+  GEBV3<-as.data.frame(colMeans(GEBV2))
+  GEBV4<-data.frame(y,GEBV3)
+  GEBV5<-GEBV4[,-1]
+  GEBV6 <- GEBV5[,-2]
+  colnames(GEBV6)<-c("ID","GEBV")
+  
+  setwd(args_set[1])
+write.csv(GEBV6,paste0("GEBV_",Sys.Date(),".csv"),row.names = F) 
+PINGJUN_ACC<-mean(RES[,3])#表型和育种值的相关系数，校正后的表型作为真实育种值。
+PINGJUN_BB<-mean(BB[,3])#表型和育种值的回归系数，越接近于1越准确。
+ACCUR<-rbind(ACCUR,PINGJUN_ACC)
+bbia<-rbind(bbia,PINGJUN_BB)
+write.csv(ACCUR,paste0("Mean_Coeffcient_",Sys.Date(),".csv"),row.names = F)
+write.csv(bbia,paste0("Mean_Regression_",Sys.Date(),".csv"),row.names = F) 
+
+

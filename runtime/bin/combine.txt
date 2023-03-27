@@ -1,0 +1,50 @@
+arg_GG <- commandArgs(trailingOnly = T)
+setwd(arg_GG[1])
+
+ReadGRMBin=function(prefix, AllN=F, size=4){
+  
+  sum_i=function(i){
+    return(sum(1:i))
+  }
+  BinFileName=paste(prefix,".grm.bin",sep="")
+  NFileName=paste(prefix,".grm.N.bin",sep="")
+  IDFileName=paste(prefix,".grm.id",sep="")
+  id = read.table(IDFileName)
+  n=dim(id)[1]
+  BinFile=file(BinFileName, "rb");
+  grm=readBin(BinFile, n=n*(n+1)/2, what=numeric(0), size=size)
+  NFile=file(NFileName, "rb");
+  if(AllN==T){
+    N=readBin(NFile, n=n*(n+1)/2, what=numeric(0), size=size)
+  }
+  else N=readBin(NFile, n=1, what=numeric(0), size=size)
+  i=sapply(1:n, sum_i)
+  return(list(diag=grm[i], off=grm[-i], id=id, N=N))
+}
+filelist <- list.files(pattern=".*..grm.bin")
+klist <- sub(pattern=".grm.bin", replacement="", filelist)
+dataname <- sub(pattern="_grm1.grm.bin", replacement="", filelist)
+for (j in 1:1){
+  data <- ReadGRMBin(klist[j], AllN=T, size=4)
+  diagdata <- diag(data$diag)
+  n <- length(data$diag)
+  
+  kkdata <- rep(0,n)
+  offdata <- offdata2 <- as.matrix(data$off)
+  for (i in 1:(n-1)){
+    #i <- 9
+    data1 <- c(offdata[1:i],rep(0,n-i))
+    offdata <- offdata[-1:-i]
+    kkdata <- cbind(kkdata,data1)
+  }
+  kkdata <- cbind(kkdata,offdata)
+  tkkdata <- t(kkdata)
+  kkdata2 <- kkdata+tkkdata+diagdata
+  write.table(kkdata2,paste(dataname[j],"kkship.txt",sep=""),col.names = F,row.names = F,quote = F,sep = " ")
+}
+
+
+
+
+
+

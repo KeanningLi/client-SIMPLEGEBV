@@ -1,0 +1,98 @@
+
+if (!requireNamespace("car")) install.packages("car")
+library(car)
+if (!requireNamespace("dplyr")) install.packages("dplyr")
+library(dplyr)
+
+
+
+
+args_qcset <- commandArgs(trailingOnly = T)
+
+aa<-read.csv(args_qcset[2],,header = T)
+k = as.numeric(args_qcset[3]) 
+z = as.numeric(args_qcset[4])
+d = k+z+2
+nam <- c(paste0("factor",c(1:k)))
+colnum <- as.numeric(ncol(aa))
+model2 <- nam[1]
+
+ANOVAdata<-list()
+combinedata <- list()
+for (i in 1:k) {
+  colnames(aa)[i+2] <- nam[i]
+  assign(nam[i],aa[,i+2])
+}
+
+if(k > 1){
+  for (i in 2:k) {
+    model2 <- paste(model2,nam[i],sep = "+")
+  }
+}else{
+  model2 <- model2
+}
+
+if(z != 0){
+  fam <- c(paste0("cov",c(1:z)))
+  for (i in 1:z) {
+    colnames(aa)[i+z+2] <- fam[i]
+    assign(fam[i],aa[,i+z+2])
+    model2 <- paste(model2,fam[i],sep = "+")
+  }
+  last_model <- paste0("y~",model2)
+}else{
+  last_model <- paste0("y~",model2)
+}
+
+cat(paste("The linear model was successfully constructed","\n"))
+cat(paste("Waiting for analysis of variance...","\n","\n"))
+
+pic <- as.data.frame(aa[,2])
+colnames(pic)[1]="IID"
+
+for (e in (d+1):(colnum)) {
+  #去除NA值
+  na.row <- is.na(aa[,e])
+  no_na <- aa[complete.cases(aa[,e]),]
+  mean_data <- mean(no_na[,e])
+  sd_data <- sd(no_na[,e])
+  minum <- mean_data-3*sd_data
+  maxum <- mean_data+3*sd_data
+  
+  remove_data <- no_na[which(no_na[,e]<minum | no_na[,e]> maxum),c(1:d,e)]
+  remain_data <- no_na[which(no_na[,e]>minum & no_na[,e]< maxum),c(1:d,e)]
+  
+  y  <-  remain_data[,ncol(remain_data)]
+  colnames(remain_data)[ncol(remain_data)] = "y"
+  
+  #计算效应值及显著性检验（F检验）
+  lhw=lm(last_model,data=remain_data)
+  Anova(lhw,data=remain_data, type = 3)
+  #工作路径
+  AAA <- Anova(lhw,data=remain_data, type = 3)
+  residual <- lhw$residuals
+  phe_qc <- cbind(remain_data[,1:2],residual)
+  colnames(phe_qc)[3] <- colnames(aa)[e]
+  
+  pic_phe_qc <- phe_qc[,2:3]
+  colnames(pic_phe_qc)[1] <- "IID"
+  pic=dplyr::left_join(pic,pic_phe_qc,by="IID")
+  
+  combinedata[[e-d]] <- phe_qc
+  ANOVAdata[[e-d]] <- AAA
+  
+}
+
+
+ANOVAdata
+
+
+
+save_path <- (args_qcset[1])
+file_name <- paste0("\\",colnames(aa)[e],"_qc")
+
+
+write.table(combinedata,paste0(save_path,file_name,".csv"),row.names = F,sep = ",",quote = F,col.names = T)
+
+write.csv(ANOVAdata,paste0(save_path,file_name,"_",Sys.Date(),"_anova.csv"),row.names = T)
+write.table(combinedata,paste0(save_path,"\\","phe_qc.csv"),row.names = F,quote = F,col.names = T)
