@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<?import javafx.scene.control.RadioButton?>
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="280.0" prefWidth="520.0" tabClosingPolicy="UNAVAILABLE"
+         xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17" fx:controller="com.example.step.javaFXTryController">
+  <tabs>
+      <Tab id="Propare" fx:id="Propare" text="Propare">
+          <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                  <children>
+                      <Label id="label1" fx:id="label1_P" alignment="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="24.0" prefWidth="70.0" text="固定效应数" textAlignment="CENTER" wrapText="true" />
+                      <TextField id="textField1_P" fx:id="textInput1_P" layoutX="100.0" layoutY="20.0" onAction="#changeListener1_P" prefHeight="24.0" prefWidth="80.0" promptText="输入个数" />
+                      <Label id="label2" fx:id="label2_P" alignment="CENTER" layoutX="200.0" layoutY="20.0" prefHeight="24.0" prefWidth="70.0" text="协变量数" textAlignment="CENTER" wrapText="true" />
+                      <TextField id="textField2_P" fx:id="textInput2_P" layoutX="280.0" layoutY="20.0" onAction="#changeListener2_P" prefHeight="24.0" prefWidth="80.0" promptText="输入个数" />
+                      <Button id="btn1_P" fx:id="fileChoose1_P" layoutX="20.0" layoutY="50.0" mnemonicParsing="false" onAction="#btnAction1_P" prefHeight="24.0" prefWidth="70.0" text="表型文件" />
+                      <TextField id="textField3_P" fx:id="textInput3_P" layoutX="100.0" layoutY="50.0" onAction="#changeListener3_P" prefHeight="24.0" prefWidth="260.0" promptText="通过按钮选择文件" />
+                      <Button id="btn2_P" fx:id="fileChoose2_P" layoutX="20.0" layoutY="80.0" mnemonicParsing="false" onAction="#btnAction2_P" prefHeight="24.0" prefWidth="70.0" text="工作路径" />
+                      <TextField id="textField4_P" fx:id="textInput4_P" layoutX="100.0" layoutY="80.0" onAction="#changeListener4_P" prefHeight="24.0" prefWidth="260.0" promptText="通过按钮选择文件夹" />
+                      <Button id="btn3_P" fx:id="fileChoose3_P" layoutX="20.0" layoutY="110.0" mnemonicParsing="false" onAction="#btnAction3_P" prefHeight="24.0" prefWidth="70.0" text="基因文件" />
+                      <TextField id="textField5_P" fx:id="textInput5_P" layoutX="100.0" layoutY="110.0" onAction="#changeListener5_P" prefHeight="24.0" prefWidth="260.0" promptText="通过按钮选择fam bim bed所在文件夹" />
+                      <Label id="label3" fx:id="label3_P" alignment="CENTER" layoutX="430.0" layoutY="20.0" prefHeight="24.0" prefWidth="70.0" text="R Version" />
+                      <TextArea id="versionView_P" fx:id="versionView1_P" layoutX="370.0" layoutY="50.0" prefHeight="54.0" prefWidth="130.0" promptText="R 路径 :" />
+                      <Button id="btn7_P" fx:id="changeVersion_P" layoutX="370.0" layoutY="20.0" mnemonicParsing="false" onAction="#changeVersion_P" prefHeight="24.0" prefWidth="60.0" text="修改..." />
+                      <ChoiceBox id="G_model" fx:id="G_model" layoutX="20.0" layoutY="140.0" prefHeight="24.0" prefWidth="70" onAction="#getSelected_P">
+                          <items>
+                              <FXCollections fx:factory="observableArrayList">
+                                  <String fx:value="Yang" />
+                                  <String fx:value="Van" />
+                              </FXCollections>
+                          </items>
+                      </ChoiceBox>
+                      <Label id="label4" fx:id="label4_P" layoutX="100.0" layoutY="140.0" prefHeight="24.0" prefWidth="30.0" alignment="CENTER" textAlignment="CENTER" />
+                      <Button id="btn4_P" fx:id="runStart1_P" layoutX="140.0" layoutY="140.0" mnemonicParsing="false" onAction="#setBat1_P" prefHeight="24.0" prefWidth="100.0" text="表 型 校 正" />
+                      <Button id="btn5_P" fx:id="runStart2_P" layoutX="260.0" layoutY="140.0" mnemonicParsing="false" onAction="#setBat2_P" prefHeight="24.0" prefWidth="100.0" text="构 建 G 阵" />
+                      <Button id="btn6_P" fx:id="runStart3_P" layoutX="370.0" layoutY="140.0" mnemonicParsing="false" onAction="#setBat3_P" prefHeight="24.0" prefWidth="130.0" text="同 时 运 行" />
+                      <Label id="label4" fx:id="label5_P" alignment="CENTER" layoutX="370.0" layoutY="110.0" prefHeight="24.0" prefWidth="60.0" text="染色体数" textAlignment="CENTER" wrapText="true" />
+                      <TextField id="textField7_P" fx:id="textInput7_P" layoutX="430.0" layoutY="110.0" onAction="#changeListener7_P" prefHeight="24.0" prefWidth="70.0" promptText="输入对数" />
+                      <Line endX="340.0" layoutX="20.0" layoutY="180.0" />
+                      <Button id="btn3_P" fx:id="fileChoose4_P" layoutX="20.0" layoutY="196.0" mnemonicParsing="false" onAction="#btnAction4_P" prefHeight="24.0" prefWidth="70.0" text="矩阵文件" />
+                      <TextField id="textField6_P" fx:id="textInput6_P" layoutX="100.0" layoutY="196.0" onAction="#changeListener6_P" prefHeight="24.0" prefWidth="260.0" promptText="通过按钮选择grm.id .bin .N.bin所在文件夹" />
+                      <Button id="btn8_P" fx:id="runStart4_P" layoutX="370.0" layoutY="196.0" mnemonicParsing="false" onAction="#setBat4_P" prefHeight="24.0" prefWidth="130.0" text="计 算 遗 传 力" />
+                  </children>
+              </AnchorPane>
+          </content>
+      </Tab>
+      <Tab id="GBLUP" fx:id="GBLUP" text="GBLUP">
+          <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                 <children>
+                    <Button id="btn1_G" fx:id="fileChoose1_G" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnAction1_G" prefHeight="24.0" prefWidth="70.0" text="工作路径" />
+                    <TextField id="textField1_G" fx:id="dropFile1_G" layoutX="100.0" layoutY="20.0" onAction="#textFiledAction1_G"  prefHeight="24.0" prefWidth="260.0" promptText="通过按钮选择文件夹" />
+                    <Button id="btn2_G" fx:id="fileChoose2_G" layoutX="20.0" layoutY="50.0" mnemonicParsing="false" onAction="#btnAction2_G" prefHeight="24.0" prefWidth="70.0" text="表型文件" />
+                    <TextField id="textField2_G" fx:id="dropFile2_G" layoutX="100.0" layoutY="50.0" onAction="#textFiledAction2_G"  prefHeight="24.0" prefWidth="260.0" promptText="通过按钮选择文件" />
+                    <Button id="btn3_G" fx:id="fileChoose3_G" layoutX="20.0" layoutY="80.0" mnemonicParsing="false" onAction="#btnAction3_G" prefHeight="24.0" prefWidth="70.0" text="G矩阵" />
+                    <TextField id="textField3_G" fx:id="dropFile3_G" layoutX="100.0" layoutY="80.0" onAction="#textFiledAction3_G"  prefHeight="24.0" prefWidth="260.0" promptText="通过按钮选择文件" />
+                    <Button id="btn4_G" fx:id="fileChoose4_G" layoutX="20.0" layoutY="110.0" mnemonicParsing="false" onAction="#btnAction4_G" prefHeight="24.0" prefWidth="70.0" text="fam文件" />
+                    <TextField id="textField4_G" fx:id="dropFile4_G" layoutX="100.0" layoutY="110.0" onAction="#textFiledAction4_G"  prefHeight="24.0" prefWidth="260.0" promptText="通过按钮选择文件" />
+                    <Label id="btn5_G" fx:id="sign1_G" alignment="CENTER" layoutX="20.0" layoutY="140.0" prefHeight="24.0" prefWidth="70.0" text="重复次数" textAlignment="CENTER" wrapText="true" />
+                    <TextField id="textField5_G" fx:id="textInput1_G" layoutX="100.0" layoutY="140.0" onAction="#changeListener1_G"  prefHeight="24.0" prefWidth="260.0" promptText="输入交叉验证重复次数" />
+                    <Label id="btn6_G" fx:id="sign2_G" alignment="CENTER" layoutX="20.0" layoutY="170.0" prefHeight="24.0" prefWidth="70.0" text="折数" textAlignment="CENTER" wrapText="true" />
+                    <TextField id="textField6_G" fx:id="textInput2_G" layoutX="100.0" layoutY="170.0" onAction="#changeListener2_G"  prefHeight="24.0" prefWidth="260.0" promptText="输入交叉验证折数" />
+                    <Button id="btn7_G" fx:id="runStart1_G" layoutX="370.0" layoutY="170.0" mnemonicParsing="false" onAction="#setBat1_G" prefHeight="24.0" prefWidth="130.0" text="开 始 计 算" />
+                     <Label id="btn9_G" fx:id="sign3_G" alignment="CENTER" layoutX="430.0" layoutY="20.0" prefHeight="24.0" prefWidth="70.0" text="R Version" />
+                     <TextArea id="versionView" fx:id="versionView" layoutX="370.0" layoutY="50.0" prefHeight="54.0" prefWidth="130.0" promptText="R 路径 :" />
+                     <Button id="btn8_G" fx:id="changeVersion_G" layoutX="430.0" layoutY="110.0" mnemonicParsing="false" onAction="#changeVersion" prefHeight="24.0" prefWidth="70.0" text="修改..." />
+                 </children>
+            </AnchorPane>
+          </content>
+      </Tab>
+    <Tab id="Bayes" fx:id="Bayes" text="Bayes">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Button id="btn1" fx:id="fileChoose1" layoutX="20.0" layoutY="50.0" mnemonicParsing="false" onAction="#btnAction1" prefHeight="24.0" prefWidth="70.0" text="个体文件" />
+                  <TextField id="textFiled1" fx:id="dropFile1" layoutX="100.0" layoutY="50.0" onAction="#textFiledAction1" prefHeight="24.0" prefWidth="260.0" promptText="通过按钮选择文件"/>
+                  <Button id="btn2" fx:id="fileChoose2" layoutX="20.0" layoutY="80.0" mnemonicParsing="false" onAction="#btnAction2" prefHeight="24.0" prefWidth="70.0" text="SNP文件"  />
+                  <TextField id="textFiled2" fx:id="dropFile2" layoutX="100.0" layoutY="80.0" onAction="#textFiledAction2" prefHeight="24.0" prefWidth="260.0" promptText="通过按钮选择文件"/>
+                   <Label id="btn7" fx:id="sign3" alignment="CENTER" layoutX="20.0" layoutY="110.0" prefHeight="24.0" prefWidth="70.0" text="SNP个数" textAlignment="CENTER" wrapText="true" />
+                   <TextField id="textFiled3" fx:id="textInput4" layoutX="100.0" layoutY="110.0"  prefHeight="24.0" prefWidth="260.0" promptText="在此输入数值"/>
+                  <Label id="btn3" fx:id="sign1" alignment="CENTER" layoutX="20.0" layoutY="140.0" prefHeight="24.0" prefWidth="70.0" text="Pi 值" textAlignment="CENTER" wrapText="true" />
+                  <TextField id="textFiled3" fx:id="textInput1" layoutX="100.0" layoutY="140.0"  prefHeight="24.0" prefWidth="260.0" promptText="在此输入数值"/>
+                  <Label id="btn4" fx:id="sign2" alignment="CENTER" layoutX="20.0" layoutY="170.0" prefHeight="24.0" prefWidth="70.0" text="遗传力" />
+                  <TextField id="textFiled4" fx:id="textInput2" layoutX="100.0" layoutY="170.0"  prefHeight="24.0" prefWidth="260.0" promptText="在此输入数值"/>
+                  <Button id="btn5" fx:id="fileChoose3" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnAction3" prefHeight="24.0" prefWidth="70.0" text="工作路径" />
+                  <TextField id="textFiled5" fx:id="textInput3" layoutX="100.0" layoutY="20.0" onAction="#changeListener3" prefHeight="24.0" prefWidth="260.0" promptText="通过按钮选择文件夹"/>
+                  <Button id="btn6" fx:id="runStart1" layoutX="370.0" layoutY="170.0" mnemonicParsing="false" onAction="#setBat1" prefHeight="24.0" prefWidth="130.0" text="开 始 计 算" />
+                  <Label id="label1" fx:id="viewLabel1" layoutX="370.0" layoutY="20.0" prefHeight="24.0" prefWidth="130.0" />
+<!--                  <Label id="label2" fx:id="viewLabel2" layoutX="370.0" layoutY="50.0" prefHeight="24.0" prefWidth="130.0" />-->
+                   <Label id="label3" fx:id="viewLabel3" layoutX="370.0" layoutY="110.0" prefHeight="24.0" prefWidth="130.0" text="   选择模型：" />
+                   <ChoiceBox id="B_model" fx:id="B_model" layoutX="370.0" layoutY="140.0" prefHeight="24.0" prefWidth="130.0" onAction="#getSelected_B">
+                       <items>
+                           <FXCollections fx:factory="observableArrayList">
+                               <String fx:value="BayesA" />
+                               <String fx:value="BayesB" />
+                               <String fx:value="BayesCpi" />
+                               <String fx:value="BayesFB" />
+                           </FXCollections>
+                       </items>
+                   </ChoiceBox>
+               </children></AnchorPane>
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>
